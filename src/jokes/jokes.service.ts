@@ -28,9 +28,11 @@ export class JokesService {
     }
 
     async addModeratedJoke(content: string, type: string): Promise<jokes> {
+        const allJokeTypes = await this.getJokeTypes();
+        const selectedJokeType = allJokeTypes.find(jokeType => jokeType.joke_type_text === type);
         const newJoke = this.jokesRepository.create({})
         newJoke.content = content;
-        newJoke.type = 0;
+        newJoke.type = selectedJokeType.joke_type_id;
         return this.jokesRepository.save(newJoke);
     }
 

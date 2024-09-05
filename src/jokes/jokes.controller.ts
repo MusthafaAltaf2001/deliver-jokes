@@ -23,7 +23,8 @@ export class JokesController {
 
     // Add a new approved joke to the database
     @MessagePattern({ cmd: 'add-moderated-joke' })
-    async addModeratedJoke(@Payload() content: string, @Payload() type: string) {
+    async addModeratedJoke(@Payload() moderatedJoke: { content: string, type: string }) {
+        const { content, type } = moderatedJoke
         return this.jokesService.addModeratedJoke(content, type);
     }
 
