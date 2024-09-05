@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { JokesService } from './jokes.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
@@ -6,10 +6,15 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 export class JokesController {
     constructor(private readonly jokesService: JokesService) { }
 
-    // @Get('random')
-    // async getRandomJoke(@Query('type') type: number) {
-    //     return this.jokesService.getRandomJoke(type);
-    // }
+    @Post('random')
+    async getRandomJoke(@Body('type') type: number) {
+        return this.jokesService.getRandomJoke(type);
+    }
+
+    @Post('newJokeType')
+    async newJokeType(@Body('type') type: string) {
+        return this.jokesService.addNewJokeType(type);
+    }
 
     // @Get('types')
     // async getJokeTypes() {

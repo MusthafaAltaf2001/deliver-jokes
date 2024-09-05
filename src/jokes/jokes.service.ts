@@ -13,13 +13,15 @@ export class JokesService {
         private jokesTypeRepository: Repository<jokes_type>,
     ) { }
 
-    // async getRandomJoke(type: number): Promise<jokes> {
-    //     const allJokes = await this.jokesTypeRepository.find({ where: { type } });
-    //     const randomIndex = Math.floor(Math.random() * allJokes.length);
-    //     return allJokes[randomIndex];
-    // }
+    async getRandomJoke(type: number) {
+        const allJokeTypes = await this.getJokeTypes();
+        const selectedJokeType = allJokeTypes.find(jokeType => jokeType.joke_type_id === type);
+        const allJokes = await this.jokesRepository.find({ where: { type: selectedJokeType.joke_type_id } });
+        const randomIndex = Math.floor(Math.random() * allJokes.length);
+        return allJokes[randomIndex];
+    }
 
-    async getJokeTypes(): Promise<Object[]> {
+    async getJokeTypes(): Promise<jokes_type[]> {
         // Get all joke types
         const jokeTypes = await this.jokesTypeRepository.find();
         return jokeTypes
@@ -30,5 +32,11 @@ export class JokesService {
         newJoke.content = content;
         newJoke.type = 0;
         return this.jokesRepository.save(newJoke);
+    }
+
+    async addNewJokeType(type: string): Promise<jokes_type> {
+        const newJokeType = this.jokesTypeRepository.create({})
+        newJokeType.joke_type_text = type;
+        return this.jokesTypeRepository.save(newJokeType);
     }
 }
